@@ -10,13 +10,13 @@ public class ApplicationLibrary {
     public static int rand() {
         Random random = new Random();
         
-        return random.nextInt((int) System.currentTimeMillis());
+        return random.nextInt(9767);
     }
     
     public static int rand(int max) {
         Random random = new Random();
 
-        return random.nextInt((int) System.currentTimeMillis()) % max;
+        return random.nextInt(9767) % max;
     }
     
     public static int distance(ILocation a, ILocation b) {
