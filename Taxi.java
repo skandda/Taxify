@@ -6,7 +6,7 @@ public class Taxi extends Vehicle {
     }
 
     @Override
-    public double calculateCost() {
-        return this.service.calculateDistance() * 2;
+    public int calculateCost() {
+        return this.service.calculateDistance() * 4;
     }
 }

@@ -6,7 +6,7 @@ public class Shuttle extends Vehicle {
     }
 
     @Override
-    public double calculateCost() {
-        return this.service.calculateDistance() * 1.5;
+    public int calculateCost() {
+        return this.service.calculateDistance() * 3;
     }
 }
