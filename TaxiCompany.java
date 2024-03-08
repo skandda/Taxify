@@ -81,6 +81,8 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     @Override
     public void arrivedAtPickupLocation(IVehicle vehicle) {
         // notify the observer a vehicle arrived at the pickup location
+    	IService service = vehicle.getService();       
+        int user = service.getUser().getId();
         notifyObserver(String.format("%-8s",vehicle.getClass().getSimpleName()) + vehicle.getId() + " has arrived for user " + user);      
         
     }

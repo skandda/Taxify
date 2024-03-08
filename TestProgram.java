@@ -1,15 +1,15 @@
 package taxify;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 public class TestProgram {
-    private List<IUser> users;
-    private List<IVehicle> vehicles;
     public static void main(String[] args) {
-        List<IVehicle> vehicles;
-        List<users> users;
+        List<IVehicle> vehicles = new ArrayList<>();
+        List<IUser> users = new ArrayList<>();
         users.add(new User(1, "John", "Doe", 'M',  LocalDate.parse("09-14-2002", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
-        users.add(new User(1, "Ali", "Smith", 'F',  LocalDate.parse("010-10-1990", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
+        users.add(new User(1, "Ali", "Smith", 'F',  LocalDate.parse("10-10-1990", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
         users.add(new User(1, "Jack", "Myers", 'M',  LocalDate.parse("11-11-1995", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
         users.add(new User(1, "Luke", "Summers", 'M',  LocalDate.parse("12-12-2001", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
         users.add(new User(1, "Lauren", "Parker", 'F',  LocalDate.parse("01-13-2000", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
@@ -35,14 +35,15 @@ public class TestProgram {
         vehicles.add(new Shuttle(9, ApplicationLibrary.randomLocation()));
         vehicles.add(new Shuttle(10, ApplicationLibrary.randomLocation()));
 
-        ITaxiCompany company = new TaxiCompany("Uber", users, vehicles);
-        IApplicationSimulator app = new ApplicationSimulator(company, users, vehicles);
-        for(int i = 0; i < 20; i++){
-            if(ApplicationLibrary.rand(10) > 5){
-                app.requestService();
-            }
+        TaxiCompany company = new TaxiCompany("Uber", users, vehicles);
+        ApplicationSimulator app = new ApplicationSimulator(company, users, vehicles);
+        company.addObserver(app);
+        for(int i = 0; i < 10; i++){
+        	System.out.println(i);
+            app.requestService();
             app.show();
             app.update();
         }
         app.showStatistics();
     }
+}

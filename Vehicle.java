@@ -94,14 +94,14 @@ public abstract class Vehicle implements IVehicle {
     @Override
     public void notifyArrivalAtPickupLocation() {
         // notify the company that the vehicle is at the pickup location and start the service
-        this.company.arrivedAtPickupLocation();
+        this.company.arrivedAtPickupLocation(this);
         this.startService();
     }
         
     @Override
     public void notifyArrivalAtDropoffLocation() {
         // notify the company that the vehicle is at the drop off location and end the service
-        this.company.arrivedAtDropoffLocation();
+        this.company.arrivedAtDropoffLocation(this);
         this.endService();
      }
         
