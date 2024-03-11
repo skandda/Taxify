@@ -3,7 +3,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Random;
+
+
 public class TestProgram {
     public static void main(String[] args) {
         List<IVehicle> vehicles = new ArrayList<>();
@@ -38,12 +39,21 @@ public class TestProgram {
         TaxiCompany company = new TaxiCompany("Uber", users, vehicles);
         ApplicationSimulator app = new ApplicationSimulator(company, users, vehicles);
         company.addObserver(app);
-        for(int i = 0; i < 10; i++){
-        	System.out.println(i);
+        app.show();
+        for(int i = 0; i <= 5; i++){
             app.requestService();
+        }
+
+        do {
             app.show();
             app.update();
-        }
+            
+            if(ApplicationLibrary.rand(10) < 2) {
+            	app.requestService();
+            }
+
+
+        } while (app.getTotalServices() != 0);
         app.showStatistics();
     }
 }

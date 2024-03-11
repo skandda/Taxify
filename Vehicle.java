@@ -65,6 +65,7 @@ public abstract class Vehicle implements IVehicle {
         // set destination to the service drop-off location, and status to "service"
 
         this.destination = service.getDropoffLocation();
+        this.route = new Route(this.location, this.destination);
         this.status = VehicleStatus.SERVICE;
     }
 
