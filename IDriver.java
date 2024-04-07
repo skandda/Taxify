@@ -7,5 +7,6 @@ public interface IDriver {
     public LocalDate getBirthday();
     public double getRating();
     public int getYearsExperience();
+    public void setRating(double rating);
     
 }

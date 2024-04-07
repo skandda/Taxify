@@ -7,6 +7,7 @@ public class Driver implements IDriver {
     private LocalDate birthday;
     private double rating;
     private int experience;
+
     public Driver(String firstName, String lastName, char gender, LocalDate birthday, double rating, int experience){
         this.firstName = firstName;
         this.lastName = lastName;
@@ -25,12 +26,16 @@ public class Driver implements IDriver {
         return this.gender;
     }
     public LocalDate getBirthday(){
-        return this.birthday
+        return this.birthday;
     }
     public double getRating(){
         return this.rating;
     }
     public int getYearsExperience(){
         return this.experience;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

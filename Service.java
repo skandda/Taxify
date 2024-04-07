@@ -5,12 +5,16 @@ public class Service implements IService {
     private ILocation pickup;
     private ILocation dropoff;
     private int stars;
+    private VehicleType vehicleType;
+    private SoundType soundType;
     
-    public Service(IUser user, ILocation pickup, ILocation dropoff) {
+    public Service(IUser user, ILocation pickup, ILocation dropoff, VehicleType vehicleType, SoundType soundType) {
         this.user = user;
         this.pickup = pickup;
         this.dropoff = dropoff; 
         this.stars = 0;
+        this.vehicleType = vehicleType;
+        this.soundType = soundType;
     }
     
     @Override

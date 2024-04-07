@@ -35,9 +35,9 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     }
         
     @Override
-    public boolean provideService(int user) {
+    public boolean provideService(int user, VehicleType vehicleType, SoundType soundType) {
         int userIndex = findUserIndex(user);        
-        int vehicleIndex = findFreeVehicle();
+        int vehicleIndex = findFreeVehicle(vehicleType);
         
         // if there is a free vehicle, assign a random pickup and drop-off location to the new service
         // the distance between the pickup and the drop-off location should be at least 3 blocks
@@ -58,7 +58,7 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
             
             // create a service with the user, the pickup and the drop-off location
 
-            IService service = new Service(this.users.get(userIndex), origin, destination);
+            IService service = new Service(this.users.get(userIndex), origin, destination, vehicleType, soundType);
             
             // assign the new service to the vehicle
             
@@ -115,15 +115,25 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         this.observer.updateObserver(message);
     }
     
-    private int findFreeVehicle() {
+    private int findFreeVehicle(VehicleType vehicleType) {
         int index;
-        
-        do {
-            
-            index = ApplicationLibrary.rand(this.vehicles.size());
-            
-        } while (!this.vehicles.get(index).isFree());
 
+        if(vehicleType == PINK) {
+
+            do {
+            
+                index = ApplicationLibrary.rand(this.vehicles.size());
+                
+            } while (!this.vehicles.get(index).isFree() && this.vehicles.get(index).driver.getGender() == 'F');
+        } else {
+
+            do {
+            
+                index = ApplicationLibrary.rand(this.vehicles.size());
+                
+            } while (!this.vehicles.get(index).isFree());
+        }
+        
         return index;
     }
 

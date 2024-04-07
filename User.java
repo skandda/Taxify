@@ -61,8 +61,8 @@ public class User implements IUser {
     }
     
     @Override
-    public void requestService() {
-        this.company.provideService(this.id);
+    public void requestService(VehicleType vehicleType, SoundType soundType) {
+        this.company.provideService(this.id, vehicleType, soundType);
     }
     
     @Override
