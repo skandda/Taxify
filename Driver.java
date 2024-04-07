@@ -15,13 +15,16 @@ public class Driver implements IDriver {
         this.rating = rating;
         this.experience = experience;
     }
-    public String getName(){
-        return this.name;
+    public String getFirstName(){
+        return this.firstName;
     }
-    public String getGender(){
+    public String getLastName(){
+        return this.lastName;
+    }
+    public char getGender(){
         return this.gender;
     }
-    public String getBirthday(){
+    public LocalDate getBirthday(){
         return this.birthday
     }
     public double getRating(){
