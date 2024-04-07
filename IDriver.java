@@ -1,9 +1,10 @@
 package taxify;
 public interface IDriver {
 
-    public String getName();
-    public String getGender();
-    public String getBirthday();
+    public String getFirstName();
+    public String getLastName();
+    public char getGender();
+    public LocalDate getBirthday();
     public double getRating();
     public int getYearsExperience();
     

@@ -1,13 +1,15 @@
 package taxify;
-
+import java.time.LocalDate;
 public class Driver implements IDriver {
-    private String name;
-    private String gender;
-    private String birthday;
+    private String firstName;
+    private String lastName;
+    private char gender;
+    private LocalDate birthday;
     private double rating;
     private int experience;
-    public Driver(String name, String gender, String birthday, double rating, int experience){
-        this.name = name;
+    public Driver(String firstName, String lastName, char gender, LocalDate birthday, double rating, int experience){
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.birthday = birthday;
         this.rating = rating;
