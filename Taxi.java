@@ -1,8 +1,8 @@
 package taxify;
 
 public class Taxi extends Vehicle {
-    public Taxi(int id, ILocation location) {
-        super(id, location);
+    public Taxi(int id, ILocation location, IDriver driver) {
+        super(id, location, driver);
     }
 
     @Override
