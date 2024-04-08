@@ -36,8 +36,15 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         
     @Override
     public boolean provideService(int user, VehicleType vehicleType, SoundType soundType) {
-        int userIndex = findUserIndex(user);        
+        int userIndex = findUserIndex(user);
+        
         int vehicleIndex = findFreeVehicle(vehicleType);
+        // if shared {
+        //     get origin
+        //     find closest car
+        //     find find car< add to that car and change the route
+        //     if not, VV
+        // }
         
         // if there is a free vehicle, assign a random pickup and drop-off location to the new service
         // the distance between the pickup and the drop-off location should be at least 3 blocks
@@ -125,6 +132,7 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
                 index = ApplicationLibrary.rand(this.vehicles.size());
                 
             } while (!this.vehicles.get(index).isFree() && this.vehicles.get(index).driver.getGender() == 'F');
+
         } else {
 
             do {

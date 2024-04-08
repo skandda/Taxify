@@ -2,6 +2,6 @@ package taxify;
 
 public enum VehicleType {
 
-    NORMAL, PINK
+    NORMAL, PINK, SHARED
 
 }
