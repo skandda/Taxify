@@ -37,27 +37,23 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     @Override
     public boolean provideService(int user, VehicleType vehicleType, SoundType soundType) {
         int userIndex = findUserIndex(user);
-        int vehicleIndex = findFreeVehicle(vehicleType);
-        // if shared {
-        //     get origin
-        //     find closest car
-        //     find find car< add to that car and change the route
-        //     if not, VV
-        // }
+
+        ILocation origin, destination;
+
+        origin = ApplicationLibrary.randomLocation();
+        destination = ApplicationLibrary.randomLocation(origin);
+
+        int vehicleIndex = findFreeVehicle(vehicleType, origin);
         
         // if there is a free vehicle, assign a random pickup and drop-off location to the new service
         // the distance between the pickup and the drop-off location should be at least 3 blocks
         
         if (vehicleIndex != -1) {
-            ILocation origin, destination;
-            
-            do {
-                
-                origin = ApplicationLibrary.randomLocation();
-                destination = ApplicationLibrary.randomLocation(origin);
-                
-            } while (ApplicationLibrary.distance(origin, this.vehicles.get(vehicleIndex).getLocation()) < ApplicationLibrary.MINIMUM_DISTANCE);
-            
+
+            IVehicle vehicle = this.vehicles.get(vehicleIndex);
+
+            vehicle.addPassengers();
+
             // update the user status
                        
             this.users.get(userIndex).setService(true);
@@ -94,11 +90,15 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     @Override
     public void arrivedAtDropoffLocation(IVehicle vehicle) {
         // a vehicle arrives at the drop-off location
-        
-        IService service = vehicle.getService();       
+
+        if(vehicle.getPassengers() == 2) {
+            IService service = vehicle.getService();         
+        } else {
+            IService service = vehicle.getSharedService();       
+        }
         int user = service.getUser().getId();
         int userIndex = findUserIndex(user);
-       
+    
         // the taxi company requests the user to rate the service, and updates its status
 
         this.users.get(userIndex).rateService(service);
@@ -108,7 +108,8 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         
         this.totalServices--;    
         
-        notifyObserver(String.format("%-8s",vehicle.getClass().getSimpleName()) + vehicle.getId() + " drops off user " + user);         
+        notifyObserver(String.format("%-8s",vehicle.getClass().getSimpleName()) + vehicle.getId() + " drops off user " + user);
+       
     }
         
     @Override
@@ -121,10 +122,10 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         this.observer.updateObserver(message);
     }
     
-    private int findFreeVehicle(VehicleType vehicleType) {
-        int index;
+    private int findFreeVehicle(VehicleType vehicleType, ILocation origin) {
+        int index = -1;
 
-        if(vehicleType == PINK) {
+        if(vehicleType == VehicleType.PINK) {
 
             do {
             
@@ -132,14 +133,31 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
                 
             } while (!this.vehicles.get(index).isFree() && this.vehicles.get(index).driver.getGender() == 'F');
 
-        } else {
+        } else if (vehicleType == VehicleType.NORMAL) {
 
             do {
             
                 index = ApplicationLibrary.rand(this.vehicles.size());
                 
             } while (!this.vehicles.get(index).isFree());
+        } else if (vehicleType == VehicleType.SHARED) {
+            int dist = 1000000;
+            for (int i = 0; i < this.vehicles.size(); ++i) {
+                IVehicle vehicle = vehicles.get(i);
+                if (!vehicle.isFree && vehicle.getService().vehicleType == VehicleType.SHARED)
+                && ApplicationLibrary.distance(origin, vehicle.getLocation() <= 3
+                && vehicle.getPassengers() == 1
+                && vehicle.service_shared == null) {
+                    index = i;
+                    dist = ApplicationLibrary.distance(origin, vehicle.getLocation())
+                }
+            }
+
+            if(index == -1) {
+                findFreeVehicle(VehicleType.NORMAL);
+            }            
         }
+        
         
         return index;
     }

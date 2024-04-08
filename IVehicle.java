@@ -18,5 +18,7 @@ public interface IVehicle extends IMovable {
     public String toString();
     public int getPassengers();
     public void addPassengers();
+    public void updateRoute();
+    public IService getSharedService();
     
 }

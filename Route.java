@@ -14,6 +14,11 @@ public class Route implements IRoute {
     public boolean hasLocations() {
         return !this.route.isEmpty();
     }
+
+    @Override
+    public List<ILocation> getRoute() {
+        return this.route;
+    }
             
     @Override
     public ILocation getNextLocation() {

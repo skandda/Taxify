@@ -11,10 +11,12 @@ public abstract class Vehicle implements IVehicle {
     private IRoute route;
     private IDriver driver;
     private int passengers;
+    private IService service_shared;
         
     public Vehicle(int id, ILocation location, IDriver driver) {        
         this.id = id;
         this.service = null;
+        this.service_shared = null;
         this.status = VehicleStatus.FREE;
         this.location = location;        
         this.destination = ApplicationLibrary.randomLocation(this.location);
@@ -49,6 +51,10 @@ public abstract class Vehicle implements IVehicle {
     public IService getService() {
         return this.service;
     }
+    @Override
+    public IService getSharedService() {
+        return this.service_shared;
+    }
     
     @Override
     public IStatistics getStatistics() {
@@ -63,47 +69,142 @@ public abstract class Vehicle implements IVehicle {
     @Override
     public void pickService(IService service) {
         // pick a service, set destination to the service pickup location, and status to "pickup"
+
+        if(this.service == null) {
+            this.service = service;
+            ILocation p1 = this.service.getPickupLocation();
+            ILocation d1 = this.service.getDropoffLocation();
+
+            this.route = new Route(vehicle.location, p1);
+            IRoute route_2 = new Route(p1, p2);
+            this.route.addAll(route_2.getRoute());
         
-        this.service = service;
-        this.destination = service.getPickupLocation();
-        this.route = new Route(this.location, this.destination);        
-        this.status = VehicleStatus.PICKUP;
+            // this.route = new Route(this.location, this.destination);        
+            this.status = VehicleStatus.PICKUP;
+            this.destination = service.getDropoffLocation();
+        } else {
+            this.service_shared = service;
+            this.route = updateRoute();
+            this.destination = service_shared.getDropoffLocation();
+        }
+    }
+
+    @Override
+    public Route updateRoute() {
+        if(this.status = VehicleStatus.PICKUP) {
+            ILocation p1 = this.service.getPickupLocation();
+            ILocation p2 = this.service_shared.getPickupLocation();
+            ILocation d1 = this.service.getDropoffLocation();
+            ILocation d2 = this.service_shared.getDropoffLocation();
+
+            this.route = new Route(vehicle.location, p1);
+            IRoute route_2 = new Route(p1, p2);
+            this.route.addAll(route_2.getRoute());
+            IRoute route_3 = new Route(p2, d1);
+            this.route.addAll(route_3.getRoute());
+            IRoute route_4 = new Route(d1, d2);
+            this.route.addAll(route_4.getRoute());
+
+        } else if (this.status = VehicleStatus.SERVICE) {
+            ILocation p2 = this.service_shared.getPickupLocation();
+            ILocation d1 = this.service.getDropoffLocation();
+            ILocation d2 = this.service_shared.getDropoffLocation();
+
+            this.route = new Route(vehicle.location, p2);
+            IRoute route_2 = new Route(p2, d1);
+            this.route.addAll(route_3.getRoute());
+            IRoute route_3 = new Route(d1, d2);
+            this.route.addAll(route_4.getRoute());
+        }
+        
     }
 
     @Override
     public void startService() {
         // set destination to the service drop-off location, and status to "service"
 
-        this.destination = service.getDropoffLocation();
-        this.route = new Route(this.location, this.destination);
+        // this.destination = service.getDropoffLocation();
+        // this.route = new Route(this.location, this.destination);
         this.status = VehicleStatus.SERVICE;
     }
 
     @Override
     public void endService() {
+        boolean discount = false;
         // update vehicle statistics
-        
-        this.statistics.updateBilling(this.calculateCost());
-        this.statistics.updateDistance(this.service.calculateDistance());
-        this.statistics.updateServices();
-        
-        // if the service is rated by the user, update statistics
-        
-        if (this.service.getStars() != 0) {
-            this.statistics.updateStars(this.service.getStars());
-            this.statistics.updateReviews();
+        if(this.service == null) {
+            discount = true;
+            this.statistics.updateBilling(this.calculateCost(discount));
+            this.statistics.updateDistance(this.service_shared.calculateDistance());
+            this.statistics.updateServices();
+            
+            // if the service is rated by the user, update statistics
+            
+            if (this.service_shared.getStars() != 0) {
+                this.statistics.updateStars(this.service_shared.getStars());
+                this.statistics.updateReviews();
+            }
+            
+            // set service to null, and status to "free"
+            
+            this.service_shared = null;
+            this.destination = ApplicationLibrary.randomLocation(this.location);
+            this.route = new Route(this.location, this.destination);
+            this.status = VehicleStatus.FREE;
+            this.passengers = 0;
+    
+            // updates the drivers rating
+    
+            this.driver.setRating(this.statistics.getStars());
+        } else if(this.service_shared == null) {
+            // not rideshare, first person done
+            this.statistics.updateBilling(this.calculateCost(discount));
+            this.statistics.updateDistance(this.service.calculateDistance());
+            this.statistics.updateServices();
+            
+            // if the service is rated by the user, update statistics
+            
+            if (this.service.getStars() != 0) {
+                this.statistics.updateStars(this.service.getStars());
+                this.statistics.updateReviews();
+            }
+            
+            // set service to null, and status to "free"
+            
+            this.service = null;
+            this.destination = ApplicationLibrary.randomLocation(this.location);
+            this.route = new Route(this.location, this.destination);
+            this.status = VehicleStatus.FREE;
+            this.passengers = 0;
+    
+            // updates the drivers rating
+    
+            this.driver.setRating(this.statistics.getStars());
+
+        } else {
+            // ride share, fisrt person done
+            this.statistics.updateBilling(this.calculateCost(discount));
+            this.statistics.updateDistance(this.service.calculateDistance());
+            this.statistics.updateServices();
+            
+            // if the service is rated by the user, update statistics
+            
+            if (this.service.getStars() != 0) {
+                this.statistics.updateStars(this.service.getStars());
+                this.statistics.updateReviews();
+            }
+            
+            // set service to null, and status to "free"
+            
+            this.service = null;
+            this.passengers -= 1;
+    
+            // updates the drivers rating
+    
+            this.driver.setRating(this.statistics.getStars());
         }
         
-        // set service to null, and status to "free"
         
-        this.service = null;
-        this.destination = ApplicationLibrary.randomLocation(this.location);
-        this.route = new Route(this.location, this.destination);
-        this.status = VehicleStatus.FREE;
-
-        // updates the drivers rating
-
-        this.driver.setRating(this.statistics.getStars());
     }
 
     @Override
@@ -150,12 +251,16 @@ public abstract class Vehicle implements IVehicle {
 
                 ILocation origin = this.service.getPickupLocation();
                 ILocation destination = this.service.getDropoffLocation();
+                ILocation origin2 = this.service_shared.getPickupLocation();
+                ILocation destination2 = this.service_shared.getDropoffLocation();
 
-                if (this.location.getX() == origin.getX() && this.location.getY() == origin.getY()) {
+                if (this.location.getX() == origin.getX() && this.location.getY() == origin.getY()
+                || this.location.getX() == origin2.getX() && this.location.getY() == origin2.getY()) {
 
                     notifyArrivalAtPickupLocation();
 
-                } else if (this.location.getX() == destination.getX() && this.location.getY() == destination.getY()) {
+                } else if (this.location.getX() == destination.getX() && this.location.getY() == destination.getY()
+                || this.location.getX() == destination2.getX() && this.location.getY() == destination2.getY()) {
 
                     notifyArrivalAtDropoffLocation();
 
@@ -165,8 +270,13 @@ public abstract class Vehicle implements IVehicle {
     }
 
     @Override
-    public int calculateCost() {
-        return this.service.calculateDistance();
+    public int calculateCost(boolean discount) {
+        if(discount) {
+            return this.service.calculateDistance() * 0.5;
+        } else {
+            return this.service.calculateDistance();
+        }
+
     }
 
     @Override
