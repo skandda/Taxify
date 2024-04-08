@@ -37,7 +37,6 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     @Override
     public boolean provideService(int user, VehicleType vehicleType, SoundType soundType) {
         int userIndex = findUserIndex(user);
-        
         int vehicleIndex = findFreeVehicle(vehicleType);
         // if shared {
         //     get origin

@@ -16,5 +16,7 @@ public interface IVehicle extends IMovable {
     public boolean isFree();
     public int calculateCost();
     public String toString();
+    public int getPassengers();
+    public void addPassengers();
     
 }

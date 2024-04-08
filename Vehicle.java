@@ -10,6 +10,7 @@ public abstract class Vehicle implements IVehicle {
     private IStatistics statistics;
     private IRoute route;
     private IDriver driver;
+    private int passengers;
         
     public Vehicle(int id, ILocation location, IDriver driver) {        
         this.id = id;
@@ -20,8 +21,15 @@ public abstract class Vehicle implements IVehicle {
         this.statistics = new Statistics();
         this.route = new Route(this.location, this.destination);
         this.driver = driver;
+        this.passengers = 0;
     }
-
+    @Override
+    public int getPassengers(){
+        return this.passengers;
+    }
+    @Override void addPassengers(){
+        this.passengers += 1;
+    }
     @Override
     public int getId() {
         return this.id;
