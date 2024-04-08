@@ -16,6 +16,20 @@ public class Service implements IService {
         this.vehicleType = vehicleType;
         this.soundType = soundType;
     }
+    @Override
+    public VehicleType getVehicleType() {
+    	return this.vehicleType;
+    }
+    
+    @Override
+    public void setVehicleType(VehicleType type) {
+    	this.vehicleType = type;
+    }
+    
+    @Override
+    public SoundType getSoundType() {
+    	return this.soundType;
+    }
     
     @Override
     public IUser getUser() {

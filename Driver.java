@@ -8,15 +8,15 @@ public class Driver implements IDriver {
     private double rating;
     private int experience;
 
-    public Driver(String firstName, String lastName, char gender, LocalDate birthday, double rating, int experience){
+    public Driver(String firstName, String lastName, char gender, LocalDate birthday, int experience){
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
         this.birthday = birthday;
-        this.rating = rating;
+        this.rating = 0;
         this.experience = experience;
     }
-    public String getFirstName(){
+	public String getFirstName(){
         return this.firstName;
     }
     public String getLastName(){

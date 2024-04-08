@@ -1,6 +1,6 @@
 package taxify;
 
-public enum VehicleType {
+public enum SoundType {
 
     STANDARD, SILENT
 

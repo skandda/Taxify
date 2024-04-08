@@ -9,5 +9,7 @@ public interface IService {
     public void setStars(int stars);
     public int calculateDistance();
     public String toString();
-    
+    public VehicleType getVehicleType();
+	public SoundType getSoundType();
+	public void setVehicleType(VehicleType type);
 }

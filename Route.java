@@ -19,6 +19,10 @@ public class Route implements IRoute {
     public List<ILocation> getRoute() {
         return this.route;
     }
+    
+    public void setRoute(List<ILocation> route) {
+    	this.route = route;
+    }
             
     @Override
     public ILocation getNextLocation() {

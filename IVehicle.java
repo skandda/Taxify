@@ -14,11 +14,12 @@ public interface IVehicle extends IMovable {
     public void notifyArrivalAtPickupLocation();
     public void notifyArrivalAtDropoffLocation();
     public boolean isFree();
-    public int calculateCost();
     public String toString();
     public int getPassengers();
     public void addPassengers();
     public void updateRoute();
     public IService getSharedService();
+    public IDriver getDriver();
+	int calculateCost(boolean discount);
     
 }

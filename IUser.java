@@ -12,7 +12,7 @@ public interface IUser {
     public boolean getService();
     public void setService(boolean service);
     public void setCompany(ITaxiCompany company);
-    public void requestService();
+    public void requestService(VehicleType vehicleType, SoundType soundType);
     public void rateService(IService service);
     public String toString();
 
