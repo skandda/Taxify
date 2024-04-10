@@ -79,11 +79,11 @@ public abstract class Vehicle implements IVehicle {
         // pick a service, set destination to the service pickup location, and status to "pickup"
 
         if(this.service == null && this.service_shared == null) {
+            // No services yet, just build one route.
             this.service = service;
             ILocation p1 = this.service.getPickupLocation();
             ILocation d1 = this.service.getDropoffLocation();
 
-//            this.route = new Route(this.location, p1);
             IRoute route_1 = new Route(this.location, p1);
             IRoute route_2 = new Route(p1, d1);
             
@@ -92,11 +92,11 @@ public abstract class Vehicle implements IVehicle {
             
             this.route.setRoute(route);
             
-        
-            // this.route = new Route(this.location, this.destination);        
+               
             this.status = VehicleStatus.PICKUP;
             this.destination = service.getDropoffLocation();
         } else if (this.service_shared == null) {
+            // If there isn't a second service, but there is a first, rebuild route to get both.
             this.service_shared = service;
             updateRoute();
             this.status = VehicleStatus.PICKUP;
@@ -106,7 +106,11 @@ public abstract class Vehicle implements IVehicle {
 
     @Override
     public void updateRoute() {
+
+        // Function that updates a route, so instead of taking the first user to destination,
+        // it rebuilds to pick up both users first.
         if(this.status == VehicleStatus.PICKUP) {
+            
             ILocation p1 = this.service.getPickupLocation();
             ILocation p2 = this.service_shared.getPickupLocation();
             ILocation d1 = this.service.getDropoffLocation();
@@ -148,10 +152,9 @@ public abstract class Vehicle implements IVehicle {
 
     @Override
     public void startService() {
-        // set destination to the service drop-off location, and status to "service"
+        // set destination to the service drop-off location, and status to respective status
 
-        // this.destination = service.getDropoffLocation();
-        // this.route = new Route(this.location, this.destination);
+        // If you are going to pick up a second user, set it to pickup instead!
 
         if(this.passengers == 1 && this.service_shared != null) {
             this.status = VehicleStatus.PICKUP;
@@ -164,8 +167,7 @@ public abstract class Vehicle implements IVehicle {
     @Override
     public void endService() {
         boolean discount = false;
-//        boolean shared = false;
-        // update vehicle statistics
+        // If the second rider is getting dropped off.
         if(this.service == null) {
             discount = true;
             this.statistics.updateBilling(this.calculateCost(discount));
@@ -192,6 +194,7 @@ public abstract class Vehicle implements IVehicle {
             // updates the drivers rating
     
             this.driver.setRating(this.statistics.getStars());
+            // if the first rider is getting dropped off
         } else if(this.service_shared == null) {
             // not rideshare, first person done
             this.statistics.updateBilling(this.calculateCost(discount));
@@ -219,6 +222,7 @@ public abstract class Vehicle implements IVehicle {
             this.driver.setRating(this.statistics.getStars());
 
         } else {
+            // if the first rider is getting dropped off
             // ride share, first person done
         	discount = true;
             this.statistics.updateBilling(this.calculateCost(discount));
@@ -256,8 +260,9 @@ public abstract class Vehicle implements IVehicle {
     @Override
     public void notifyArrivalAtDropoffLocation() {
         // notify the company that the vehicle is at the drop off location and end the service
-//    	System.out.println("NUM PASS BEFORE DECREMENT: " + this.passengers);
         this.company.arrivedAtDropoffLocation(this);
+
+        // Decrement the number of passengers.
         this.passengers -= 1;
         this.endService();
      }
@@ -294,8 +299,6 @@ public abstract class Vehicle implements IVehicle {
             	if(this.service_shared != null && this.service != null
                 		&& this.service.getDropoffLocation().getX() == this.service_shared.getDropoffLocation().getX()
                 		&& this.service.getDropoffLocation().getY() == this.service_shared.getDropoffLocation().getY()) {
-            		
-            		System.out.println("hit on same destination");
             		
             		ILocation origin = this.service.getPickupLocation();
                     ILocation destination = this.service.getDropoffLocation();
@@ -374,6 +377,7 @@ public abstract class Vehicle implements IVehicle {
                     " to pickup user " + this.service_shared.getUser().getId() : " in service "));
     	} else {
     		// this.service is null but service shared is also null
+            // neither are null
             return this.id + " at " + this.location + " driving to " + this.destination +
                     ((this.status == VehicleStatus.FREE) ? " is free with path " + this.route.toString(): ((this.status == VehicleStatus.PICKUP) ?
                     " to pickup user " + this.service.getUser().getId() : " in service "));

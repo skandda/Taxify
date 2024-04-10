@@ -11,7 +11,6 @@ public class Taxi extends Vehicle {
     		if(this.getPassengers() == 2) {
     			return this.getService().calculateDistance() * 3 - 2;
     		} else {
-    			System.out.println(this.getPassengers());
         		return this.getSharedService().calculateDistance() * 3 - 2;
     		} 
     	} else {
