@@ -144,21 +144,19 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         		}
         	}
         } else if (vehicleType == VehicleType.SHARED) {
-            int distance = 1000000;
+            int distance = 3;
             for (int i = 0; i < this.vehicles.size(); ++i) {
-                if (vehicles.get(i).getPassengers() < 2 
-        		&& !vehicles.get(i).isFree()
-        		&& vehicles.get(i).getService() != null
+                if (vehicles.get(i).getService() != null
         		&& vehicles.get(i).getService().getVehicleType() == VehicleType.SHARED
-                && ApplicationLibrary.distance(origin, vehicles.get(i).getLocation()) <= 3
+                && ApplicationLibrary.distance(origin, vehicles.get(i).getLocation()) <= distance
                 && vehicles.get(i).getSharedService() == null
-                && ApplicationLibrary.distance(origin, vehicles.get(i).getLocation()) < distance
                 && ApplicationLibrary.distance(vehicles.get(i).getService().getDropoffLocation(), origin) != 0
                 && ApplicationLibrary.distance(vehicles.get(i).getLocation(), vehicles.get(i).getService().getDropoffLocation()) > 3) {
                     index = i;
                     distance = ApplicationLibrary.distance(origin, vehicles.get(i).getLocation());
                 }
             }
+
 
             if(index == -1) {
             	for(int i = 0; i < this.vehicles.size(); ++i) {
