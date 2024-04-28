@@ -80,6 +80,7 @@ public class User implements IUser, IMovable {
         // notify the company that the vehicle is at the drop off location and end the service
         this.company.arrivedAtMicroDropOff(vehicle);
         this.vehicle.endService();
+        this.microService = null;
         this.vehicle = null;
      }
     

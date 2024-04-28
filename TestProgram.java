@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 public class TestProgram {
     public static void main(String[] args) {
-    	for(int p = 0; p < 500; p++) {
+    	for(int p = 0; p < 1; p++) {
     		List<IVehicle> vehicles = new ArrayList<>();
             List<IUser> users = new ArrayList<>();
+            List<IMicroMobility> micros = new ArrayList<>();
             users.add(new User(1, "John", "Doe", 'M',  LocalDate.parse("09-14-2002", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
             users.add(new User(2, "Ali", "Smith", 'F',  LocalDate.parse("10-10-1990", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
             users.add(new User(3, "Jack", "Myers", 'M',  LocalDate.parse("11-11-1995", DateTimeFormatter.ofPattern("MM-dd-yyyy"))));
@@ -46,13 +47,26 @@ public class TestProgram {
             		new Driver("John", "Doette", 'F',  LocalDate.parse("09-14-2010", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 0)));
             vehicles.add(new Shuttle(10, ApplicationLibrary.randomLocation(),
             		new Driver("Johnular", "Doe", 'M',  LocalDate.parse("09-14-2005", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 0)));
-
-            TaxiCompany company = new TaxiCompany("Uber", users, vehicles);
-            ApplicationSimulator app = new ApplicationSimulator(company, users, vehicles);
+            micros.add(new Bike(1, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(2, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(3, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(4, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(5, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(6, ApplicationLibrary.randomLocation()));
+            micros.add(new Bike(7, ApplicationLibrary.randomLocation()));
+            micros.add(new Scooter(8, ApplicationLibrary.randomLocation()));
+            micros.add(new Scooter(9, ApplicationLibrary.randomLocation()));
+            micros.add(new Scooter(10, ApplicationLibrary.randomLocation()));
+            micros.add(new Scooter(11, ApplicationLibrary.randomLocation()));
+            micros.add(new Scooter(12, ApplicationLibrary.randomLocation()));
+           
+            TaxiCompany company = new TaxiCompany("Uber", users, vehicles, micros);
+            ApplicationSimulator app = new ApplicationSimulator(company, users, vehicles, micros);
             
             int sharedRides = 0;
             int pinkRides = 0;
             int normalRides = 0;
+            int microRides = 0;
             
             company.addObserver(app);
             app.show();
@@ -64,9 +78,12 @@ public class TestProgram {
                 } else if(ApplicationLibrary.rand(10) < 4) {
                 	app.requestService(VehicleType.PINK, SoundType.STANDARD);
                 	pinkRides += 1;
-                } else {
+                } else if(ApplicationLibrary.rand(10) < 6){
                 	app.requestService(VehicleType.NORMAL, SoundType.STANDARD);
                 	normalRides += 1;
+                }else {
+                	app.requestMicroService();
+                	microRides += 1;
                 }
 
             }
@@ -82,18 +99,18 @@ public class TestProgram {
                     } else if(ApplicationLibrary.rand(10) < 4) {
                     	app.requestService(VehicleType.PINK, SoundType.STANDARD);
                     	pinkRides += 1;
-                    } else {
+                    } else if (ApplicationLibrary.rand(10) < 6){
                     	app.requestService(VehicleType.NORMAL, SoundType.STANDARD);
                     	normalRides += 1;
+                    } else {
+                    	app.requestMicroService();
+                    	microRides += 1;
                     }
                 }
 
 
             } while (app.getTotalServices() != 0);
             app.showStatistics();
-            System.out.println("Shared Rides: " + sharedRides);
-            System.out.println("Pink Rides: " + pinkRides);
-            System.out.println("Normal Rides: " + normalRides);
     	}
         
 }

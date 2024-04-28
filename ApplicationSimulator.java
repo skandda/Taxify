@@ -60,10 +60,8 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         
         for (IMicroMobility mobility : this.micros) {
         	if(mobility.getService() == null) {
-        		System.out.println(mobility.getClass().getSimpleName() + " " + mobility.getId() + " not moving");
         		continue;
         	} else {
-        		System.out.println(mobility.getClass().getSimpleName() + " " + mobility.getId() + " is moving");
             	mobility.getService().getUser().move();
         	}
 
@@ -93,7 +91,7 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         do {
             
             index = ApplicationLibrary.rand(this.users.size());;
-            
+            System.out.println("stuck");            
         } while (this.users.get(index).getMicroService());
         
         this.company.provideMicroService(this.users.get(index).getId());
