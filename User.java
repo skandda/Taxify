@@ -2,14 +2,20 @@ package taxify;
 
 import java.time.LocalDate;
 
-public class User implements IUser {
+public class User implements IUser, IMovable {
     private int id;
     private String firstName;
     private String lastName;
     private char gender;
     private LocalDate birthDate;
+    
     private ITaxiCompany company;
     private boolean service;
+    private IRoute route;
+    private ILocation location;
+    private IMicroService microService;
+    private IMicroMobility vehicle;
+    
     
     public User(int id, String firstName, String lastName, char gender, LocalDate birthDate) {
         this.id = id;
@@ -18,7 +24,74 @@ public class User implements IUser {
         this.gender = gender;
         this.birthDate = birthDate;
         this.service = false;
+        this.microService = null;
+        this.route = null;
     }
+    
+    @Override
+    public void setVehicle(IMicroMobility vehicle) {
+    	this.vehicle = vehicle;
+    }
+    
+    @Override
+    public void setRoute(IRoute route) {
+    	this.route = route;
+    }
+    
+	@Override
+	public void move() {
+//		System.out.println("User id: " + this.id + " Route: " + this.route);
+//		System.out.println("User location: " + this.location + "Vehicle Origin: " + this.vehicle.getLocation() + " Destination: " + this.microService.getDropoffLocation());
+//		System.out.println("Dropoff 1: " + this.microService.getDropoffLocation() + " Location 1: " + this.location);
+		this.location = this.route.getNextLocation();
+		this.vehicle.setLocation(this.location);
+//		System.out.println("Dropoff 2: " + this.microService.getDropoffLocation() + " Location 2: " + this.location);
+	
+		ILocation originMicroService = this.vehicle.getLocation();
+		ILocation destinationMicroService = this.microService.getDropoffLocation();
+		
+		if (this.location.getX() == originMicroService.getX() && this.location.getY() == originMicroService.getY()
+				&& this.vehicle.getStatus() == MicroServiceStatus.BOOKED) {
+
+			notifyArrivalAtMicroPickup();
+
+        } else if (this.location.getX() == destinationMicroService.getX() && this.location.getY() == destinationMicroService.getY()) {
+        	
+        	notifyArrivalAtMicroDropOff();
+
+        }        
+	}
+
+	
+    @Override
+    public void notifyArrivalAtMicroPickup() {
+        // notify the company that the vehicle is at the pickup location and start the service
+		this.company.arrivedAtMicroMobility(this);
+        this.vehicle.startService();
+    }
+        
+    @Override
+    public void notifyArrivalAtMicroDropOff() {
+        // notify the company that the vehicle is at the drop off location and end the service
+        this.company.arrivedAtMicroDropOff(vehicle);
+        this.vehicle.endService();
+        this.vehicle = null;
+     }
+    
+    @Override
+    public IMicroMobility getVehicle() {
+    	return this.vehicle;
+    }
+	
+	@Override
+	public void setLocation(ILocation location) {
+		this.location = location;
+	}
+	
+	@Override
+	public ILocation getLocation() {
+		return this.location;
+	}
     
     @Override
     public int getId() {
@@ -28,6 +101,11 @@ public class User implements IUser {
     @Override
     public String getFirstName() {
         return this.firstName;
+    }
+    
+    @Override
+    public void setMicroService(IMicroService service) {
+    	this.microService = service;
     }
     
     @Override
@@ -66,6 +144,14 @@ public class User implements IUser {
     }
     
     @Override
+    public boolean getMicroService() {
+    	if(this.microService == null) {
+    		return false;
+    	}else {
+    		return true;
+    	}
+    }
+    @Override
     public void rateService(IService service) {
         // users rate around 50% of the services (1 to 5 stars)
         
@@ -78,4 +164,6 @@ public class User implements IUser {
     public String toString() {
         return this.getId() + " " + String.format("%-20s",this.getFirstName() + " " + this.getLastName());
     }
+
+
 }

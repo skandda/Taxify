@@ -6,6 +6,7 @@ public abstract class Vehicle implements IVehicle {
     private int id;
     private ITaxiCompany company;
     private IService service;
+    private IService service_shared;
     private VehicleStatus status;
     private ILocation location;
     private ILocation destination;
@@ -13,7 +14,7 @@ public abstract class Vehicle implements IVehicle {
     private IRoute route;
     private IDriver driver;
     private int passengers;
-    private IService service_shared;
+ 
         
     public Vehicle(int id, ILocation location, IDriver driver) {        
         this.id = id;
@@ -59,6 +60,9 @@ public abstract class Vehicle implements IVehicle {
     public IService getService() {
         return this.service;
     }
+    
+
+    
     @Override
     public IService getSharedService() {
         return this.service_shared;

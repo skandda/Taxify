@@ -6,11 +6,13 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
     private ITaxiCompany company;
     private List<IUser> users;
     private List<IVehicle> vehicles;
+    private List<IMicroMobility> micros;
     
-    public ApplicationSimulator(ITaxiCompany company, List<IUser> users, List<IVehicle> vehicles) {
+    public ApplicationSimulator(ITaxiCompany company, List<IUser> users, List<IVehicle> vehicles, List<IMicroMobility> micros) {
         this.company = company;
         this.users = users;
         this.vehicles = vehicles;
+        this.micros = micros;
     }
     
     @Override
@@ -21,11 +23,10 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
 
         for (IVehicle vehicle : this.vehicles) {
             System.out.println(vehicle.toString());
-            if(vehicle.getPassengers() == 2) {
-            	System.out.println("car has 2 passengers");
-            }
-            
-        }   
+        }
+        for (IMicroMobility mobility : this.micros) {
+            System.out.println(mobility.getClass().getSimpleName() + " " + mobility.toString());
+        }
     }
     
     @Override
@@ -56,6 +57,15 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         for (IVehicle vehicle : this.vehicles) {
                vehicle.move();
         }
+        
+        for (IMicroMobility mobility : this.micros) {
+        	if(mobility.getService() == null) {
+        		continue;
+        	} else {
+            	mobility.getService().getUser().move();
+        	}
+
+        }
     }
 
     @Override
@@ -71,6 +81,21 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         } while (this.users.get(index).getService());
         
         this.company.provideService(this.users.get(index).getId(), vehicleType, soundType);
+    }
+    
+    @Override
+    public void requestMicroService() {        
+        // find an available user and requests a service to the Taxi Company
+
+        int index;
+        
+        do {
+            
+            index = ApplicationLibrary.rand(this.users.size());;
+            
+        } while (this.users.get(index).getMicroService());
+        
+        this.company.provideMicroService(this.users.get(index).getId());
     }
     
     @Override

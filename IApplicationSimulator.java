@@ -7,5 +7,6 @@ public interface IApplicationSimulator {
     public void update();
     public int getTotalServices();
 	public void requestService(VehicleType vehicleType, SoundType soundType);
+	public void requestMicroService();
     
 }

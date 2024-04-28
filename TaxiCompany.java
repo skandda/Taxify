@@ -6,13 +6,15 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     private String name;
     private List<IUser> users;
     private List<IVehicle> vehicles;
+    private List<IMicroMobility> micros;
     private int totalServices;
     private IObserver observer;
     
-    public TaxiCompany(String name, List<IUser> users, List<IVehicle> vehicles) {
+    public TaxiCompany(String name, List<IUser> users, List<IVehicle> vehicles, List<IMicroMobility> micros) {
         this.name = name;
         this.users = users;
-        this.vehicles = vehicles;        
+        this.vehicles = vehicles;
+        this.micros = micros;
         this.totalServices = 0;
         
         for (IUser user : this.users) {
@@ -21,6 +23,10 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         
         for (IVehicle vehicle : this.vehicles) {
             vehicle.setCompany(this);
+        }
+        
+        for (IMicroMobility mobility : this.micros) {
+        	mobility.setCompany(this);
         }
     }
     
@@ -33,6 +39,72 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
     public int getTotalServices() {
         return this.totalServices;
     }
+    
+	@Override
+	public boolean provideMicroService(int user) {
+		int userIndex = findUserIndex(user);
+		
+		ILocation origin, destination;
+		
+		origin = ApplicationLibrary.randomLocation();
+		this.users.get(userIndex).setLocation(origin);
+		destination = ApplicationLibrary.randomLocation(origin);
+		
+		int microIndex = findFreeMicroMobility(destination);
+		
+		if(microIndex != -1) {
+			this.users.get(userIndex).setService(true);
+
+			this.users.get(userIndex).setVehicle(this.micros.get(microIndex));
+			
+			IMicroService service = new MicroService(this.users.get(userIndex), origin, destination);
+			
+			this.users.get(userIndex).setMicroService(service);
+			
+			this.micros.get(microIndex).pickService(service);
+			
+			notifyObserver("User " + this.users.get(userIndex).getId() + " who is at " + this.users.get(userIndex).getLocation() +  " has booked a micro mobility from "
+					+ this.micros.get(microIndex).getLocation().toString() + " to " + service.getDropoffLocation().toString()
+					+ ", the ride is assigned to " + this.micros.get(microIndex).getClass().getSimpleName()
+					+ " " + this.micros.get(microIndex).getId());
+			
+			this.totalServices++;
+			
+			return true;
+		}
+        System.out.println("Could not find ride. Sorry!\n");
+        return false;
+	}
+	
+	private int findFreeMicroMobility(ILocation destination) {
+       int index = -1;
+        
+	   	for(int i = 0; i < this.micros.size(); ++i) {
+			IMicroMobility micro = micros.get(i);
+			if(micro.isFree()
+				&& micro.getLocation() != destination) {
+				index = i;
+				break;
+			}
+	   	}	
+        return index;
+	}
+	
+	@Override
+    public void arrivedAtMicroMobility(IUser user) {
+        // notify the observer a vehicle arrived at the pickup location 
+        notifyObserver(String.format("%-8s", user.getId() + " has arrived at MicroMobility."));
+	}
+	
+	@Override
+	public void arrivedAtMicroDropOff(IMicroMobility mobility) {
+		
+		this.totalServices--;
+		
+		 notifyObserver(String.format("%-8s", mobility.getClass().getSimpleName() + " " + mobility.getId() +  " has arrived at the destination with user "
+				 + mobility.getService().getUser().getId()));
+		
+	}
         
     @Override
     public boolean provideService(int user, VehicleType vehicleType, SoundType soundType) {
@@ -181,4 +253,6 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
         
         return -1;
     }
+
+
 }

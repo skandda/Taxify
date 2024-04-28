@@ -29,7 +29,7 @@ public class TestProgram {
             vehicles.add(new Taxi(1, ApplicationLibrary.randomLocation(), 
             		new Driver("Johnny", "Doe", 'M',  LocalDate.parse("09-14-2002", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 2)));
             vehicles.add(new Taxi(2, ApplicationLibrary.randomLocation(),
-            		new Driver("Johnanie", "Doe", 'F',  LocalDate.parse("09-14-2003", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 03==3)));
+            		new Driver("Johnanie", "Doe", 'F',  LocalDate.parse("09-14-2003", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 3)));
             vehicles.add(new Taxi(3, ApplicationLibrary.randomLocation(),
             		new Driver("JohnBoy", "Doe", 'M',  LocalDate.parse("09-14-2004", DateTimeFormatter.ofPattern("MM-dd-yyyy")), 0)));
             vehicles.add(new Taxi(4, ApplicationLibrary.randomLocation(),
