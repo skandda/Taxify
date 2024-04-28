@@ -98,6 +98,9 @@ public class MicroMobility implements IMicroMobility {
 		this.status = MicroServiceStatus.BOOKED;
 		this.destination = this.location;
 		this.service.getUser().setRoute(new Route(this.service.getUser().getLocation(), this.destination));
+		if(this.service.getUser().getLocation().getX() == this.location.getX() && this.service.getUser().getLocation().getY() == this.location.getY()) {
+			this.service.getUser().notifyArrivalAtMicroPickup();
+		}
 		
 	}
 

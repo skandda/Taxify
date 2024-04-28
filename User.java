@@ -29,6 +29,11 @@ public class User implements IUser, IMovable {
     }
     
     @Override
+    public IRoute getRoute() {
+    	return this.route;
+    }
+    
+    @Override
     public void setVehicle(IMicroMobility vehicle) {
     	this.vehicle = vehicle;
     }

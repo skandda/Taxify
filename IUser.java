@@ -24,5 +24,6 @@ public interface IUser extends IMovable {
 	public void setRoute(IRoute route);
 	public ILocation getLocation();
 	public void setMicroService(IMicroService service);
+	public IRoute getRoute();
 
 }

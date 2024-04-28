@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class TestProgramMicro {
     public static void main(String[] args) {
-    	for(int p = 0; p < 50; p++) {    		
+    	for(int p = 0; p < 100; p++) {    		
     		List<IVehicle> vehicles = new ArrayList<>();
             List<IUser> users = new ArrayList<>();
             List<IMicroMobility> micros = new ArrayList<>();
@@ -55,10 +55,13 @@ public class TestProgramMicro {
             do {
             	app.show();
             	app.update();
-            	if(ApplicationLibrary.rand(10)< 2) {
+            	if(ApplicationLibrary.rand(10)< 1) {
             		app.requestMicroService();
             	}
-            }while(app.getTotalServices() != 0);
+            	System.out.println("should end");
+            } while(app.getTotalServices() != 0);
+            
+            System.out.println("ended");
             app.showStatistics();
     	}
     }

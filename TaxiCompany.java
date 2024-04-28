@@ -135,7 +135,7 @@ public class TaxiCompany implements ITaxiCompany, ISubject {
             // assign the new service to the vehicle
             
             this.vehicles.get(vehicleIndex).pickService(service);            
-             
+            
             notifyObserver("User " + this.users.get(userIndex).getId() + " requests a service from " + service.toString() + ", the ride is assigned to " +
                            this.vehicles.get(vehicleIndex).getClass().getSimpleName() + " " + this.vehicles.get(vehicleIndex).getId() + " at location " +
                            this.vehicles.get(vehicleIndex).getLocation().toString());

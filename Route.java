@@ -67,7 +67,6 @@ public class Route implements IRoute {
             
             route.add(new Location(x1, y1));
         }
-        
         return route;
     }       
 }

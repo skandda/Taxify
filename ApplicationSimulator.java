@@ -60,14 +60,15 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         
         for (IMicroMobility mobility : this.micros) {
         	if(mobility.getService() == null) {
+        		System.out.println(mobility.getClass().getSimpleName() + " " + mobility.getId() + " not moving");
         		continue;
         	} else {
+        		System.out.println(mobility.getClass().getSimpleName() + " " + mobility.getId() + " is moving");
             	mobility.getService().getUser().move();
         	}
 
         }
     }
-
     @Override
     public void requestService(VehicleType vehicleType, SoundType soundType) {        
         // find an available user and requests a service to the Taxi Company
