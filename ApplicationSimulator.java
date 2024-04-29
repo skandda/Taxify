@@ -91,7 +91,7 @@ public class ApplicationSimulator implements IApplicationSimulator, IObserver {
         do {
             
             index = ApplicationLibrary.rand(this.users.size());;
-            System.out.println("stuck");            
+                       
         } while (this.users.get(index).getMicroService());
         
         this.company.provideMicroService(this.users.get(index).getId());
